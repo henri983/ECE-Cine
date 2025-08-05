@@ -1,8 +1,16 @@
 <?php
 session_start();
-require_once '../../includes/cine_db.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
+
+// Vérification de la connexion à la base de données
+$user_id = $_SESSION['id_utilisateur'] ?? null;
+
+// Récupérer tous les films validés, triés par thème
+$stmt = $pdo->query("SELECT * FROM films WHERE valide = 1 ORDER BY theme ASC, titre ASC");
+$films = $stmt->fetchAll();
 ?>
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php'; ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -13,15 +21,8 @@ require_once '../../includes/cine_db.php';
 </head>
 <body>
 
-
-<?php require_once 'C:/xampp/htdocs/ECE-Cine/includes/header.php'; ?>
-
-
-$user_id = $_SESSION['id_utilisateur'] ?? null;
-
-// Récupérer tous les films validés, triés par thème
-$stmt = $pdo->query("SELECT * FROM films WHERE valide = 1 ORDER BY theme ASC, titre ASC");
-$films = $stmt->fetchAll();
+<?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/header.php';
 ?>
 
 <div class="container mt-4">
@@ -64,7 +65,7 @@ $films = $stmt->fetchAll();
     <?php endforeach; ?>
 </div>
 
-<?php require_once 'C:/xampp/htdocs/ECE-Cine/includes/footer.php'; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/footer.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

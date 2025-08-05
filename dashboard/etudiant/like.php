@@ -1,9 +1,12 @@
 <?php
-require_once '../includes/db.php';
+
 session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
+// dashboard/etudiant/like.php
 
 if (!isset($_SESSION['id_utilisateur']) || !isset($_POST['film_id'])) {
-    header('Location: parcourir.php');
+    header('Location: home.php');
     exit;
 }
 

@@ -29,3 +29,16 @@
   
   /* box-shadow: 2px 2px 8px; */
 }
+.navbar-brand{
+font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 13px;
+  background-color: #2ecc71; /* Vert doux */
+  color: #fff;
+  padding: 15px 15px;
+  border: 2px ;
+  display: inline-block;
+  border-radius: 1px;
+  margin: 15px;
+}
+

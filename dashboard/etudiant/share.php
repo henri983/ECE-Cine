@@ -1,7 +1,8 @@
 <?php
 
 session_start();
-require_once '../../includes/cine_db.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
 
 // dashboard/etudiant/share.php
 
@@ -51,8 +52,8 @@ if (isset($_POST['Ajouter'])) {
 
     echo "<div class='alert alert-success'>Film ajouté avec succès !</div>";
 }
-?> -->
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php'; ?>
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -63,7 +64,8 @@ if (isset($_POST['Ajouter'])) {
 </head>
 <body>
 
-<?php require_once '../../includes/header.php'; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/header.php'; ?>
+
 <form action="" method="post">
 <div class="container mt-4">
     <h2>Partagez un film</h2>
@@ -91,8 +93,7 @@ if (isset($_POST['Ajouter'])) {
     <button type="submit" class="btn btn-primary">Partager</button>
 </form>
 
-
-<!-- <?php require_once '../includes/footer.php'; ?> -->
+ <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/footer.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

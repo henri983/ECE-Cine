@@ -1,6 +1,6 @@
 
 <div class="logo">
-  <a class="navbar-brand" href="<?= BASE_URL ?>index.php">ECE CINE</a>
+  <a class="#" href="<?= BASE_URL ?>index.php">ECE CINE</a>
 
 </div>
 
