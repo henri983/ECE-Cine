@@ -1,0 +1,70 @@
+<?php
+session_start();
+require_once '../../includes/cine_db.php';
+?>
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php'; ?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title> ECE Ciné </title>
+     <link rel="stylesheet" href="../../assets/style/header.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+
+<?php require_once 'C:/xampp/htdocs/ECE-Cine/includes/header.php'; ?>
+
+
+$user_id = $_SESSION['id_utilisateur'] ?? null;
+
+// Récupérer tous les films validés, triés par thème
+$stmt = $pdo->query("SELECT * FROM films WHERE valide = 1 ORDER BY theme ASC, titre ASC");
+$films = $stmt->fetchAll();
+?>
+
+<div class="container mt-4">
+    <h2>🎥 Tous les films partagés</h2>
+
+    <?php
+    $currentTheme = null;
+    foreach ($films as $film):
+        if ($film['theme'] !== $currentTheme):
+            $currentTheme = $film['theme'];
+            echo "<h3 class='mt-4'>" . htmlspecialchars($currentTheme) . "</h3>";
+        endif;
+    ?>
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <img src="<?= htmlspecialchars($film['affiche']) ?>" class="img-fluid rounded" alt="<?= htmlspecialchars($film['titre']) ?>">
+            </div>
+            <div class="col-md-8">
+                <h4><?= htmlspecialchars($film['titre']) ?></h4>
+                <p><strong>Réalisateur(s)</strong> : <?= htmlspecialchars($film['realisateurs']) ?></p>
+
+                <?php if (!empty($film['trailer'])): ?>
+                    <div class="ratio ratio-16x9 mb-2">
+                        <iframe src="<?= htmlspecialchars($film['trailer']) ?>" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                <?php endif; ?>
+
+                <p><strong>Likes</strong> : <?= $film['nb_likes'] ?></p>
+
+                <?php if ($user_id): ?>
+                    <form method="post" action="like.php">
+                        <input type="hidden" name="film_id" value="<?= $film['id'] ?>">
+                        <button type="submit" class="btn btn-outline-primary">👍 Liker</button>
+                    </form>
+                <?php else: ?>
+                    <p><em>Connectez-vous pour liker ce film.</em></p>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>
+
+<?php require_once 'C:/xampp/htdocs/ECE-Cine/includes/footer.php'; ?>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,18 +1,20 @@
+<?php
+session_start();
+require_once '../../includes/cine_db.php';
+?>
 <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php'; ?>
-
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title> ECE Ciné </title>
-    <link rel="stylesheet" href="assets/style/header.css">
+    <link rel="stylesheet" href="../../assets/style/header.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 </head>
 <body>
 
-<?php require_once 'includes/header.php'; ?>
-<?php require_once 'includes/db.php'; ?>
+<?php require_once '../../includes/header.php'; ?>
+
 
 <div class="container mt-4">
     <h2> Bienvenue sur ECE Ciné </h2>
@@ -57,7 +59,7 @@
 
 
 
-<?php require_once 'includes/footer.php'; ?>
+<?php require_once 'C:/xampp/htdocs/ECE-Cine/includes/footer.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
