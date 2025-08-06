@@ -10,6 +10,7 @@ $error = '';
 // Traitement du formulaire d'inscription
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     $username = trim(filter_var($_POST['username'], FILTER_SANITIZE_STRING));
+    $role = in_array($_POST['type'], ['etudiant', 'enseignant', 'administratif']) ? $_POST['type'] : 'etudiant';
     $email = trim(filter_var($_POST['email'], FILTER_SANITIZE_EMAIL));
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
@@ -33,13 +34,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
             // Hashage du mot de passe
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-            // Insère l'utilisateur avec rôle 'customer' et approuve = 0
-            $stmt = $pdo->prepare("INSERT INTO users (username, email, password_hash, role, approuve) VALUES (?, ?, ?, 'customer', 0)");
-            if ($stmt->execute([$username, $email, $hashed_password])) {
-                $_SESSION['message'] = "Inscription réussie ! En attente d'approbation par un administrateur.";
-                header('Location: login.php');
-                exit;
-            } else {
+            // Insère l'utilisateur avec rôle 'etudiant' et approuve = 0
+            $stmt = $pdo->prepare("INSERT INTO users (username, email, password_hash, role, approuve) VALUES (?, ?, ?, ?, 0)");
+            if ($stmt->execute([$username, $email, $hashed_password, $role])) {
+            $_SESSION['message'] = "Inscription réussie ! En attente d'approbation par un administrateur.";
+            header('Location: login.php');
+            exit;
+            }else {
                 $error = "Erreur lors de l'inscription. Veuillez réessayer.";
             }
         }

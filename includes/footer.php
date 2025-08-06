@@ -1,11 +1,11 @@
 <?php
 // Connexion à la base (si ce n'est pas déjà fait dans ce fichier)
 if (!isset($pdo)) {
-    require_once 'includes/db.php';
+   require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
 }
 
 // Récupération de l’admin principal
-$stmtAdmin = $pdo->prepare("SELECT nom, prenom, email FROM utilisateurs WHERE statut = 'admin' LIMIT 1");
+$stmtAdmin = $pdo->prepare("SELECT username, prenom, email FROM users WHERE role = 'admin' LIMIT 1");
 $stmtAdmin->execute();
 $admin = $stmtAdmin->fetch();
 ?>
@@ -15,7 +15,7 @@ $admin = $stmtAdmin->fetch();
         <?php if ($admin): ?>
             <p class="mb-1">
                 📩 <strong>Administrateur principal :</strong><br>
-                <?= htmlspecialchars($admin['prenom']) . ' ' . htmlspecialchars($admin['nom']) ?> – 
+                <?= htmlspecialchars($admin['prenom']) . ' ' . htmlspecialchars($admin['username']) ?> – 
                 <a class="text-info" href="mailto:<?= htmlspecialchars($admin['email']) ?>">
                     <?= htmlspecialchars($admin['email']) ?>
                 </a>

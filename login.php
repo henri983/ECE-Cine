@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
 
                 // Redirection selon rôle
                 if ($user['role'] === 'admin') {
-                    header('Location: admin/admin.php');
+                    header('Location: /ECE-Cine/admin/admin.php');
                 } else {
                     header('Location: index.php');
                 }

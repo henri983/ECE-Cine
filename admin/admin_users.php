@@ -4,7 +4,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
  
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+    header('Location: ../login.php');
     exit;
 }
 
@@ -14,7 +14,7 @@ $role = $stmt->fetchColumn();
 
 if ($role !== 'admin') {
     $_SESSION['error'] = "Accès refusé.";
-    header('Location: index.php');
+    header('Location: ../index.php');
     exit;
 }
 
@@ -92,8 +92,9 @@ $users = $pdo->query("SELECT * FROM users ORDER BY created_at DESC")->fetchAll()
                         <form method="post" class="d-flex flex-column flex-md-row align-items-center">
                             <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
                             <select name="role" class="form-select form-select-sm me-2" style="width: 110px;">
-                                <option value="customer" <?= $user['role'] === 'customer' ? 'selected' : '' ?>>Client</option>
-                                <option value="admin" <?= $user['role'] === 'admin' ? 'selected' : '' ?>>Admin</option>
+                                <option value="customer" <?= $user['role'] === 'etudiant' ? 'selected' : '' ?>>Etudiant</option>
+                                <option value="admin" <?= $user['role'] === 'enseignant' ? 'selected' : '' ?>>Enseignant</option>
+                                <option value="customer" <?= $user['role'] === 'administratif' ? 'selected' : '' ?>>Admin</option>
                             </select>
                     </td>
                     <td>

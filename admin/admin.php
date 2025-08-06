@@ -6,7 +6,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
 
 if (!isset($_SESSION['user_id'])) {
     $_SESSION['error'] = "Accès non autorisé.";
-    header('Location: login.php');
+    header('Location: ../login.php');
     exit;
 }
 
@@ -17,7 +17,7 @@ $role = $stmt->fetchColumn();
 
 if ($role !== 'admin') {
     $_SESSION['error'] = "Accès réservé à l'administrateur.";
-    header('Location: index.php');
+    header('Location: ../index.php');
     exit;
 }
 
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Récupération des utilisateurs non approuvés
-$stmt_pending = $pdo->query("SELECT * FROM users WHERE role = 'customer' AND approuve = 0");
+$stmt_pending = $pdo->query("SELECT * FROM users WHERE role = 'etudiant' AND approuve = 0");
 $utilisateurs_non_valides = $stmt_pending->fetchAll();
 ?>
 
