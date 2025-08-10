@@ -4,7 +4,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
 require_once $_SERVER['DOCUMENT_ROOT']. '/ECE-Cine/includes/db_connect.php';
 
-$films=getTopFilms($pd0);
+
  ?>
 
 
@@ -30,22 +30,23 @@ $films=getTopFilms($pd0);
 
     <?php
     // Récupérer les 10 films les plus likés et validés
-    $stmt = $pdo->prepare("SELECT * FROM films WHERE valide = 1 ORDER BY nb_likes DESC LIMIT 10");
-    $stmt->execute();
+    $stmt = $pdo->prepare("SELECT * FROM film WHERE valide = 1 ORDER BY nb_likes DESC LIMIT 10");
+   // $stmt->execute();
     $films = $stmt->fetchAll();
+    $films=getTopFilms($pdo);
 
     if (count($films) > 0): ?>
         <div id="carouselFilms" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <?php foreach ($films as $index => $film): ?>
                     <?php
-                        $affiche = filter_var($film['affiche'], FILTER_VALIDATE_URL) ? $film['affiche'] : '/ECE-Cine/assets/images/default.jpg';
+                        $affiche = filter_var($film['url_affiche'], FILTER_VALIDATE_URL) ? $film['url_affiche'] : '/ECE-Cine/assets/images/default.jpg';
                     ?>
                     <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
-                        <img src="<?= htmlspecialchars($film['affiche']) ?>" class="d-block w-100" alt="Affiche du film <?= htmlspecialchars($film['titre']) ?>">
+                        <img src="<?= htmlspecialchars($film['url_affiche']) ?>" class="d-block w-100" alt="Affiche du film <?= htmlspecialchars($film['titre']) ?>">
                         <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
                             <h5><?= htmlspecialchars($film['titre']) ?></h5>
-                            <p>Réalisateur(s) : <?= htmlspecialchars($film['realisateurs']) ?></p>
+                            <p>Réalisateur(s) : <?= htmlspecialchars($film['realisateur']) ?></p>
                         </div>
                     </div>
                 <?php endforeach; ?>
