@@ -2,6 +2,7 @@
 session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/film_function.php';
  
 
 if (!isset($_SESSION['user_id'])) {
@@ -45,6 +46,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Récupération des utilisateurs non approuvés
 $stmt_pending = $pdo->query("SELECT * FROM users WHERE role = 'etudiant' AND approuve = 0");
 $utilisateurs_non_valides = $stmt_pending->fetchAll();
+
+$filmsNonValides = getUnvalidatedFilms($pdo);// récupération des films  non validés
+
+//si un film est validé
+if(isset($_POST['valider_film'])){
+    $filmid = (int) $_POST['film_id'];
+    if(validateFilm($pdo, $filmid)){
+        $_SESSION['message'] = 'Film validé';
+    }
+}
+
+if (isset($_POST['rejeter_film'])) {
+    $filmid = (int) $_POST['film_id'];
+    if(rejectFilm($pdo, $filmid)){
+        $_SESSION['message'] = 'Film rejeté';
+    }
+    
+}
+
 ?>
 
 <!DOCTYPE html>

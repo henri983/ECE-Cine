@@ -2,6 +2,9 @@
 session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
+require_once $_SERVER['DOCUMENT_ROOT']. '/ECE-Cine/includes/db_connect.php';
+
+$films=getTopFilms($pd0);
  ?>
 
 
@@ -35,8 +38,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
         <div id="carouselFilms" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <?php foreach ($films as $index => $film): ?>
+                    <?php
+                        $affiche = filter_var($film['affiche'], FILTER_VALIDATE_URL) ? $film['affiche'] : '/ECE-Cine/assets/images/default.jpg';
+                    ?>
                     <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
-                        <img src="<?= htmlspecialchars($film['affiche']) ?>" class="d-block w-100" alt="<?= htmlspecialchars($film['titre']) ?>">
+                        <img src="<?= htmlspecialchars($film['affiche']) ?>" class="d-block w-100" alt="Affiche du film <?= htmlspecialchars($film['titre']) ?>">
                         <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
                             <h5><?= htmlspecialchars($film['titre']) ?></h5>
                             <p>Réalisateur(s) : <?= htmlspecialchars($film['realisateurs']) ?></p>
