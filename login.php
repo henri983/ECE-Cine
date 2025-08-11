@@ -32,12 +32,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
                 $_SESSION['message'] = "Connexion réussie !";
 
                 // Redirection selon rôle
-                if ($user['role'] === 'admin') {
-                    header('Location: /ECE-Cine/admin/admin.php');
-                } else {
-                    header('Location: index.php');
-                }
-                exit;
+               switch ($user['role']) {
+                case 'admin':
+                    header('Location :/ECE-Cine/admin/espace.php');
+                    break;
+                case 'enseignant':
+                    header('Location: /ECE-Cine/enseignant/espace.php');
+                    break;
+                case 'etudiant':
+                    header('Location: /ECE-Cine/etudiant/espace.php');
+                    break;
+                case 'administratif':
+                    header('Location: /ECE-Cine/administratif/espace.php');
+                    break;            
+                
+                default:
+                    header('Location: /ECE-Cine/index.php');
+                    break;
+               }
             }
         } else {
             $error = "Email ou mot de passe incorrect.";

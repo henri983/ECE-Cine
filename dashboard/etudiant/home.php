@@ -2,6 +2,7 @@
 session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/db_connect.php';
 
 ?>
 
@@ -27,7 +28,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
 
     <?php
     // Récupérer les 10 films les plus likés et validés
-    $stmt = $pdo->prepare("SELECT * FROM films WHERE valide = 1 ORDER BY nb_likes DESC LIMIT 10");
+    $stmt = $pdo->prepare("SELECT * FROM film WHERE valide = 1 ORDER BY nb_likes DESC LIMIT 10");
     $stmt->execute();
     $films = $stmt->fetchAll();
 

@@ -4,6 +4,17 @@
 <h2>ECE CINE</h2>
 </div>
 
+//pour charger l'utilisateur
+<?php if (isset($_SESSION['role'])): ?>
+<?php if ($_SESSION['role'] === 'etudiant'): ?>
+  <li> <a href="etudiant/espace.php">Espace etudiant</a></li>
+  <?php elseif ($_SESSION['role'] === 'enseignant'): ?>
+    <li> <a href="enseignant/espace.php">Espace enseignant</a>
+    <?php elseif ($_SESSION['role'] === 'admin'): ?>
+      <li><a href="admin/espace.php">Espace administif</a></li>
+  <?php endif; ?>
+<?php endif; ?>  
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container">
    <!-- <a class="navbar-brand" href="<?= BASE_URL ?>dashboard/etudiant/home.php">Accueil</a>
