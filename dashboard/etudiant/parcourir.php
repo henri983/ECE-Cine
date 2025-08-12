@@ -2,12 +2,19 @@
 session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/db_connect.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/users_fonction.php';
 
 // Vérification de la connexion à la base de données
-$user_id = $_SESSION['id_utilisateur'] ?? null;
+$user_id = $_SESSION['id_users'] ?? null;
 
-// Récupérer tous les films validés, triés par thème
-$stmt = $pdo->query("SELECT * FROM films WHERE valide = 1 ORDER BY theme ASC, titre ASC");
+// Récupérer tous les films, triés par genre puis titre
+$stmt = $pdo->query("
+    SELECT f.*, 
+        (SELECT COUNT(*) FROM likes l WHERE l.id_film = f.id) AS nb_likes
+    FROM film f
+    ORDER BY f.genre ASC, f.titre ASC
+");
 $films = $stmt->fetchAll();
 ?>
 
@@ -29,20 +36,22 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/header.php';
     <h2>🎥 Tous les films partagés</h2>
 
     <?php
-    $currentTheme = null;
+    $currentGenre = null;
     foreach ($films as $film):
-        if ($film['theme'] !== $currentTheme):
-            $currentTheme = $film['theme'];
-            echo "<h3 class='mt-4'>" . htmlspecialchars($currentTheme) . "</h3>";
+        if ($film['genre'] !== $currentGenre):
+            $currentGenre = $film['genre'];
+            echo "<h3 class='mt-4'>" . htmlspecialchars($currentGenre) . "</h3>";
         endif;
     ?>
         <div class="row mb-4">
             <div class="col-md-4">
-                <img src="<?= htmlspecialchars($film['affiche']) ?>" class="img-fluid rounded" alt="<?= htmlspecialchars($film['titre']) ?>">
+                <img src="<?= htmlspecialchars($film['url_affiche']) ?>" class="img-fluid rounded" alt="<?= htmlspecialchars($film['titre']) ?>">
             </div>
             <div class="col-md-8">
                 <h4><?= htmlspecialchars($film['titre']) ?></h4>
-                <p><strong>Réalisateur(s)</strong> : <?= htmlspecialchars($film['realisateurs']) ?></p>
+                <p><strong>Réalisateur</strong> : <?= htmlspecialchars($film['realisateur']) ?></p>
+                <p><strong>Année</strong> : <?= htmlspecialchars($film['annee_sortie']) ?></p>
+                <p><strong>Synopsis</strong> : <?= htmlspecialchars($film['synopsis']) ?></p>
 
                 <?php if (!empty($film['trailer'])): ?>
                     <div class="ratio ratio-16x9 mb-2">

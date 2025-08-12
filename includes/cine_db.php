@@ -1,20 +1,28 @@
 <?php
-// ici ce sont les fonctions liees aux films
-function getTopFilms(PDO $pdo, int $limit = 10): array {
-    $sql = "
-        SELECT f.id, f.titre, f.realisateur, f.url_affiche, COUNT(l.id) AS nb_likes
-        FROM film f
-        LEFT JOIN likes l ON f.id = l.id_film
-        GROUP BY f.id
-        ORDER BY nb_likes DESC
-        LIMIT ?
-    ";
+/**
+ * Connexion à la base de données via PDO
+ * Utilisation centralisée pour tout le site
+ */
 
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $limit, PDO::PARAM_INT);
-    $stmt->execute();
+$DB_HOST = "localhost";     // Hôte MySQL
+$DB_NAME = "ece_cine";      // Nom de la base
+$DB_USER = "root";          // Utilisateur MySQL
+$DB_PASS = "";              // Mot de passe MySQL (vide par défaut sous XAMPP/MAMP)
 
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+try {
+    // Création de la connexion PDO
+    $pdo = new PDO(
+        "mysql:host={$DB_HOST};dbname={$DB_NAME};charset=utf8",
+        $DB_USER,
+        $DB_PASS,
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // Erreurs en exceptions
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, // Fetch par défaut en tableau associatif
+            PDO::ATTR_EMULATE_PREPARES => false // Préparer les requêtes côté serveur
+        ]
+    );
+} catch (PDOException $e) {
+    // En cas d'erreur, on affiche un message et on arrête
+    die("Erreur de connexion à la base de données : " . $e->getMessage());
 }
-
-?>
+ ?>

@@ -2,10 +2,10 @@
 session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/film_function.php';
- 
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/film_functions.php';
 
-if (!isset($_SESSION['user_id'])) {
+// Vérification connexion
+if (!isset($_SESSION['id'])) {
     $_SESSION['error'] = "Accès non autorisé.";
     header('Location: ../login.php');
     exit;
@@ -13,10 +13,10 @@ if (!isset($_SESSION['user_id'])) {
 
 // Vérification du rôle admin
 $stmt = $pdo->prepare("SELECT role FROM users WHERE id = ?");
-$stmt->execute([$_SESSION['user_id']]);
+$stmt->execute([$_SESSION['id']]);
 $role = $stmt->fetchColumn();
 
-if ($role !== 'admin') {
+if ($role !== 'administrateur') {
     $_SESSION['error'] = "Accès réservé à l'administrateur.";
     header('Location: ../index.php');
     exit;
@@ -24,54 +24,47 @@ if ($role !== 'admin') {
 
 $admin_message = '';
 
-// Gestion des redirections vers les pages admin
+// Gestion des actions POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['manage_products'])) {
-        header('Location: admin_products.php'); // à créer
+        header('Location: admin_products.php');
         exit;
     } elseif (isset($_POST['view_orders'])) {
-        header('Location: admin_orders.php'); // à créer
+        header('Location: admin_orders.php');
         exit;
     } elseif (isset($_POST['manage_users'])) {
         header('Location: admin_users.php');
         exit;
     } elseif (isset($_POST['approuver_utilisateur'])) {
-        $user_id = (int) $_POST['user_id'];
+        $id_user = (int) $_POST['id_users'];
         $stmt = $pdo->prepare("UPDATE users SET approuve = 1 WHERE id = ?");
-        $stmt->execute([$user_id]);
+        $stmt->execute([$id_user]);
         $admin_message = "Utilisateur approuvé avec succès.";
+    } elseif (isset($_POST['valider_film'])) {
+        $film_id = (int) $_POST['film_id'];
+        if (validateFilm($pdo, $film_id)) {
+            $_SESSION['message'] = 'Film validé.';
+        }
+    } elseif (isset($_POST['rejeter_film'])) {
+        $film_id = (int) $_POST['film_id'];
+        if (rejectFilm($pdo, $film_id)) {
+            $_SESSION['message'] = 'Film rejeté.';
+        }
     }
 }
 
 // Récupération des utilisateurs non approuvés
 $stmt_pending = $pdo->query("SELECT * FROM users WHERE role = 'etudiant' AND approuve = 0");
-$utilisateurs_non_valides = $stmt_pending->fetchAll();
+$utilisateurs_non_valides = $stmt_pending->fetchAll(PDO::FETCH_ASSOC);
 
-$filmsNonValides = getUnvalidatedFilms($pdo);// récupération des films  non validés
-
-//si un film est validé
-if(isset($_POST['valider_film'])){
-    $filmid = (int) $_POST['film_id'];
-    if(validateFilm($pdo, $filmid)){
-        $_SESSION['message'] = 'Film validé';
-    }
-}
-
-if (isset($_POST['rejeter_film'])) {
-    $filmid = (int) $_POST['film_id'];
-    if(rejectFilm($pdo, $filmid)){
-        $_SESSION['message'] = 'Film rejeté';
-    }
-    
-}
-
+// Récupération des films non validés
+$filmsNonValides = getUnvalidatedFilms($pdo);
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title> Panneau d'administration </title>
+    <title>Panneau d'administration</title>
     <link rel="stylesheet" href="assets/style/header.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 </head>
@@ -81,7 +74,7 @@ if (isset($_POST['rejeter_film'])) {
 
 <div class="container my-5">
     <h1 class="text-center mb-4">Panneau d'Administration</h1>
-    <p class="text-center text-muted mb-4">Bienvenue, <?= htmlspecialchars($_SESSION['username'] ?? 'Admin') ?>.</p>
+    <p class="text-center text-muted mb-4">Bienvenue, <?= htmlspecialchars($_SESSION['username'] ?? 'administrateur') ?>.</p>
 
     <?php if ($admin_message): ?>
         <div class="alert alert-info"><?= htmlspecialchars($admin_message) ?></div>
@@ -111,57 +104,4 @@ if (isset($_POST['rejeter_film'])) {
             </div>
         </div>
         <div class="col">
-            <div class="card h-100 shadow-sm text-center">
-                <div class="card-body">
-                    <h5 class="card-title">Gestion des Utilisateurs</h5>
-                    <p class="card-text text-muted">Approuver ou modifier les comptes.</p>
-                    <form method="post">
-                        <button type="submit" name="manage_users" class="btn btn-warning mt-3">Gérer les utilisateurs</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Liste des utilisateurs à approuver -->
-    <h3 class="mb-3">Utilisateurs en attente de validation</h3>
-    <?php if (count($utilisateurs_non_valides) === 0): ?>
-        <p class="text-muted">Aucun utilisateur à approuver pour le moment.</p>
-    <?php else: ?>
-        <div class="table-responsive">
-            <table class="table table-striped align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>ID</th>
-                        <th>Nom d'utilisateur</th>
-                        <th>Email</th>
-                        <th>Date d'inscription</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($utilisateurs_non_valides as $user): ?>
-                        <tr>
-                            <td><?= $user['id'] ?></td>
-                            <td><?= htmlspecialchars($user['username']) ?></td>
-                            <td><?= htmlspecialchars($user['email']) ?></td>
-                            <td><?= $user['created_at'] ?></td>
-                            <td>
-                                <form method="post" class="d-inline">
-                                    <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
-                                    <button type="submit" name="approuver_utilisateur" class="btn btn-sm btn-success">Approuver</button>
-                                </form>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-    <?php endif; ?>
-</div>
-
-
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/footer.php'; ?>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+            <div class="card h-100 shadow-sm text-cente

@@ -12,7 +12,7 @@ $error = '';
 // Traitement du formulaire d'inscription
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     $username = trim(filter_var($_POST['username'], FILTER_SANITIZE_STRING));
-    $role = in_array($_POST['type'], ['etudiant', 'enseignant', 'administratif']) ? $_POST['type'] : 'etudiant';
+    $role = in_array($_POST['type'], ['etudiant', 'enseignant', 'administrateur']) ? $_POST['type'] : 'etudiant';
     $email = trim(filter_var($_POST['email'], FILTER_SANITIZE_EMAIL));
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
@@ -113,8 +113,8 @@ if (isset($_SESSION['error'])) {
                         <input class="form-check-input" type="radio"  id="radioDefault2" name="type" value="enseignant">
                         <label class="form-check-label" for="radioDefault2">Enseignant</label>
 
-                       <input class="form-check-input" type="radio"  id="radioDefault3" name="type" value="administratif">
-                        <label class="form-check-label" for="radioDefault3">Administratif</label>
+                       <input class="form-check-input" type="radio"  id="radioDefault3" name="type" value="administrateur">
+                        <label class="form-check-label" for="radioDefault3">Administrateur</label>
                        </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Adresse Email</label>

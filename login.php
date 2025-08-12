@@ -25,31 +25,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
                 $error = "Votre compte n’a pas encore été approuvé.";
             } else {
                 // Connexion réussie
-                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['id_users'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['role'] = $user['role'];
 
                 $_SESSION['message'] = "Connexion réussie !";
 
                 // Redirection selon rôle
-               switch ($user['role']) {
-                case 'admin':
-                    header('Location :/ECE-Cine/admin/espace.php');
-                    break;
-                case 'enseignant':
-                    header('Location: /ECE-Cine/enseignant/espace.php');
-                    break;
-                case 'etudiant':
-                    header('Location: /ECE-Cine/etudiant/espace.php');
-                    break;
-                case 'administratif':
-                    header('Location: /ECE-Cine/administratif/espace.php');
-                    break;            
-                
-                default:
-                    header('Location: /ECE-Cine/index.php');
-                    break;
-               }
+                switch ($user['role']) {
+                    case 'administrateur':
+                        header('Location: /ECE-Cine/admin/espace.php');
+                        break;
+                    case 'enseignant':
+                        header('Location: /ECE-Cine/enseignant/espace.php');
+                        break;
+                    case 'etudiant':
+                        header('Location: /ECE-Cine/etudiant/espace.php');
+                        break;
+                    default:
+                        header('Location: /ECE-Cine/index.php');
+                        break;
+                }
+                exit;
             }
         } else {
             $error = "Email ou mot de passe incorrect.";

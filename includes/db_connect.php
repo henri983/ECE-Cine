@@ -1,6 +1,6 @@
 <?php
 // chemin vers la base de donnees
-$host = 'localhost:3307';
+$host = 'localhost:3306';
 $dbname = 'ece_cine';
 $user = 'root';
 $password = '';

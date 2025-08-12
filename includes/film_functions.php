@@ -1,6 +1,6 @@
 <?php
 function getUnvalidatedFilms(PDO $pdo): array{
-    $stmt = $pdo->prepare("SELECT * FROM films WHERE valide = 0");
+    $stmt = $pdo->prepare("SELECT * FROM film WHERE valide = 0");
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 }
@@ -16,7 +16,7 @@ function validateFilm(PDO $pdo, int $filmId): bool{
 // elle met a jour le champ 'valide' a 2 pour le film avec l'ID donné
 // retourne true si le rejet est réussi, au cas contraire false
 function rejectFilm(PDO $pdo, int $filmId): bool{
-    $stmt = $pdo->prepare("UPDATE films SET valide = 2 WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE film SET valide = 2 WHERE id = ?");
     return $stmt->execute([$filmId]);
 }
 ?>

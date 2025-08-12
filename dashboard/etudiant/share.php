@@ -3,52 +3,42 @@
 session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/db_connect.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/users_fonction.php';
 
-// dashboard/etudiant/share.php
-
-// autorisation de l'afficharge 
 if (isset($_POST['Ajouter'])) {
-    require_once '../includes/db.php';
-  if (!empty($_FILES['affiche']['name'])){
-    print_r($_FILES);
-    $file_name = $_FILES['affiche']['name'];
-    $file_tmp = $_FILES['affiche']['tmp_name'];
-    $file_size = $_FILES['affiche']['size'];
-    $target_dir = 'assets/uploads/${file_name}';
+    if (!empty($_FILES['affiche']['name'])) {
+        $file_name = $_FILES['affiche']['name'];
+        $file_tmp = $_FILES['affiche']['tmp_name'];
+        $file_size = $_FILES['affiche']['size'];
+        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        $target_dir = '../../assets/uploads/' . uniqid() . '_' . basename($file_name);
 
-    // verfication de l'extension du fichier
-    $file_ext = explode('.', $file_name);
-    $file_ext = strtolower(end($file_ext));
-
-    //validation de l'extension
-    if (in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif'])) {
-        // Vérification de la taille du fichier
-        if ($file_size < 5000000) { // 5MB max
-            // Déplacer le fichier vers le dossier uploads
-            move_uploaded_file($file_tmp, $target_dir);
+        if (in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+            if ($file_size < 5000000) {
+                move_uploaded_file($file_tmp, $target_dir);
+            } else {
+                echo "<div class='alert alert-danger'>Le fichier est trop volumineux. Taille maximale : 5MB.</div>";
+                exit;
+            }
         } else {
-            echo "<div class='alert alert-danger'>Le fichier est trop volumineux. Taille maximale : 5MB.</div>";
+            echo "<div class='alert alert-danger'>Extension de fichier non autorisée. Seuls les fichiers JPG, JPEG, PNG et GIF sont autorisés.</div>";
             exit;
         }
     } else {
-        echo "<div class='alert alert-danger'>Extension de fichier non autorisée. Seuls les fichiers JPG, JPEG, PNG et GIF sont autorisés.</div>";
-        exit;
+        $target_dir = null;
     }
-  }
- 
+
     $titre = $_POST['titre'];
-    $realisateurs = $_POST['realisateurs'];
-    $theme = $_POST['theme'];
-    $affiche = $_FILES['affiche']['name'];
+    $realisateur = $_POST['realisateur'];
+    $annee_sortie = $_POST['annee_sortie'];
+    $genre = $_POST['genre'];
+    $synopsis = $_POST['synopsis'];
     $trailer = $_POST['trailer'];
-     
+    $id_users = $_SESSION['id_users'];
 
-    // Déplacer le fichier d'affiche vers le dossier souhaité
-    move_uploaded_file($_FILES['affiche']['tmp_name'], '../assets/uploads/' . $affiche);
-
-    // Insertion du film dans la base de données
-    $stmt = $pdo->prepare("INSERT INTO films (titre, realisateurs, theme, affiche, trailer, valide) VALUES (?, ?, ?, ?, ?, 0)");
-    $stmt->execute([$titre, $realisateurs, $theme, '../assets/uploads/' . $affiche, $trailer]);
+    $stmt = $pdo->prepare("INSERT INTO film (titre, realisateur, annee_sortie, genre, synopsis, url_affiche, trailer, date_ajout, id_users) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), ?)");
+    $stmt->execute([$titre, $realisateur, $annee_sortie, $genre, $synopsis, $target_dir, $trailer, $id_users]);
 
     echo "<div class='alert alert-success'>Film ajouté avec succès !</div>";
 }
@@ -58,7 +48,7 @@ if (isset($_POST['Ajouter'])) {
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title> ECE Ciné </title>
+    <title>ECE Ciné</title>
     <link rel="stylesheet" href="../../assets/style/header.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 </head>
@@ -66,7 +56,7 @@ if (isset($_POST['Ajouter'])) {
 
 <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/header.php'; ?>
 
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
 <div class="container mt-4">
     <h2>Partagez un film</h2>
     <div class="mb-3">
@@ -74,26 +64,34 @@ if (isset($_POST['Ajouter'])) {
         <input type="text" class="form-control" id="titre" name="titre" required>
     </div>
     <div class="mb-3">
-        <label for="realisateurs" class="form-label">Réalisateur(s)</label>
-        <input type="text" class="form-control" id="realisateurs" name="realisateurs" required>
+        <label for="realisateur" class="form-label">Réalisateur</label>
+        <input type="text" class="form-control" id="realisateur" name="realisateur" required>
     </div>
     <div class="mb-3">
-        <label for="theme" class="form-label">Thème</label>
-        <input type="text" class="form-control" id="theme" name="theme" required>
+        <label for="annee_sortie" class="form-label">Année de sortie</label>
+        <input type="text" class="form-control" id="annee_sortie" name="annee_sortie" required>
     </div>
     <div class="mb-3">
-        <label for="affiche" class="form-label">Inserer l'affiche</label>
+        <label for="genre" class="form-label">Genre</label>
+        <input type="text" class="form-control" id="genre" name="genre" required>
+    </div>
+    <div class="mb-3">
+        <label for="synopsis" class="form-label">Synopsis</label>
+        <textarea class="form-control" id="synopsis" name="synopsis" required></textarea>
+    </div>
+    <div class="mb-3">
+        <label for="affiche" class="form-label">Insérer l'affiche</label>
         <input type="file" class="form-control" id="affiche" name="affiche" required>
-        <input type="submit" value="Ajouter" name="Ajouter" class="btn btn-primary mt-2">
     </div>
     <div class="mb-3">
         <label for="trailer" class="form-label">Trailer (URL)</label>
         <input type="url" class="form-control" id="trailer" name="trailer">
     </div>
-    <button type="submit" class="btn btn-primary">Partager</button>
+    <button type="submit" name="Ajouter" class="btn btn-primary">Partager</button>
+</div>
 </form>
 
- <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/footer.php'; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/footer.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

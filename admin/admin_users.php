@@ -3,16 +3,16 @@ session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
  
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['id_users'])) {
     header('Location: ../login.php');
     exit;
 }
 
 $stmt = $pdo->prepare("SELECT role FROM users WHERE id = ?");
-$stmt->execute([$_SESSION['user_id']]);
+$stmt->execute([$_SESSION['id_users']]);
 $role = $stmt->fetchColumn();
 
-if ($role !== 'admin') {
+if ($role !== 'administrateur') {
     $_SESSION['error'] = "Accès refusé.";
     header('Location: ../index.php');
     exit;
@@ -21,7 +21,7 @@ if ($role !== 'admin') {
 // Traitement : supprimer utilisateur
 if (isset($_POST['delete_user'])) {
     $delete_id = (int) $_POST['delete_user'];
-    if ($delete_id !== $_SESSION['user_id']) {
+    if ($delete_id !== $_SESSION['id_users']) {
         $pdo->prepare("DELETE FROM users WHERE id = ?")->execute([$delete_id]);
         $_SESSION['message'] = "Utilisateur supprimé.";
     } else {
@@ -31,12 +31,12 @@ if (isset($_POST['delete_user'])) {
 
 // Traitement : mise à jour rôle/approuvé
 if (isset($_POST['update_user'])) {
-    $user_id = (int) $_POST['user_id'];
+    $id_users = (int) $_POST['id_users'];
     $role = $_POST['role'];
     $approuve = isset($_POST['approuve']) ? 1 : 0;
 
     $stmt = $pdo->prepare("UPDATE users SET role = ?, approuve = ? WHERE id = ?");
-    $stmt->execute([$role, $approuve, $user_id]);
+    $stmt->execute([$role, $approuve, $id_users]);
 
     $_SESSION['message'] = "Utilisateur mis à jour.";
 }
@@ -90,11 +90,11 @@ $users = $pdo->query("SELECT * FROM users ORDER BY created_at DESC")->fetchAll()
                     <td><?= htmlspecialchars($user['email']) ?></td>
                     <td>
                         <form method="post" class="d-flex flex-column flex-md-row align-items-center">
-                            <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
+                            <input type="hidden" name="id_users" value="<?= $user['id'] ?>">
                             <select name="role" class="form-select form-select-sm me-2" style="width: 110px;">
-                                <option value="customer" <?= $user['role'] === 'etudiant' ? 'selected' : '' ?>>Etudiant</option>
-                                <option value="admin" <?= $user['role'] === 'enseignant' ? 'selected' : '' ?>>Enseignant</option>
-                                <option value="customer" <?= $user['role'] === 'administratif' ? 'selected' : '' ?>>Admin</option>
+                                <option value="etudiant" <?= $user['role'] === 'etudiant' ? 'selected' : '' ?>>Etudiant</option>
+                                <option value="enseignant" <?= $user['role'] === 'enseignant' ? 'selected' : '' ?>>Enseignant</option>
+                                <option value="administrateur" <?= $user['role'] === 'administrateur' ? 'selected' : '' ?>>Administrateur</option>
                             </select>
                     </td>
                     <td>
@@ -106,7 +106,7 @@ $users = $pdo->query("SELECT * FROM users ORDER BY created_at DESC")->fetchAll()
                     <td class="text-nowrap">
                             <button type="submit" name="update_user" class="btn btn-sm btn-outline-success me-1">Enregistrer</button>
                         </form>
-                        <?php if ($user['id'] != $_SESSION['user_id']): ?>
+                        <?php if ($user['id'] != $_SESSION['id_users']): ?>
                         <form method="post" class="d-inline">
                             <button type="submit" name="delete_user" value="<?= $user['id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Supprimer cet utilisateur ?')">Supprimer</button>
                         </form>

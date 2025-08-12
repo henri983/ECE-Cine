@@ -2,10 +2,12 @@
 // Connexion à la base (si ce n'est pas déjà fait dans ce fichier)
 if (!isset($pdo)) {
    require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
+   require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php';
+   require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/db_connect.php';
 }
 
 // Récupération de l’admin principal
-$stmtAdmin = $pdo->prepare("SELECT username, prenom, email FROM users WHERE role = 'admin' LIMIT 1");
+$stmtAdmin = $pdo->prepare("SELECT username, prenom, email FROM users WHERE role = 'administrateur' LIMIT 1");
 $stmtAdmin->execute();
 $admin = $stmtAdmin->fetch();
 ?>
