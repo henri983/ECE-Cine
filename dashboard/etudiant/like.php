@@ -7,22 +7,29 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/db_connect.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/users_fonction.php';
 // dashboard/etudiant/like.php
 
+
 if (!isset($_SESSION['id_users']) || !isset($_POST['film_id'])) {
-    header('Location: home.php');
+    http_response_code(400);
+    echo 'Erreur de session ou de données';
     exit;
 }
 
-$user_id = $_SESSION['id_users'];
-$film_id = intval($_POST['film_id']);
+$id_user = $_SESSION['id_users'];
+$id_film = (int)$_POST['film_id'];
+// ici on verifie si le film est deja liké
+$stmt->prepare("SELECT * FROM likes WHERE id_users = ? AND id_film = ?");
+$stmt->execute([$id_user, $id_film]);
+if ($stmt->fetch()) {
+   //ici on annule le like
+   $pdo->prepare("DELETE FROM likes WHERE id_users = ? AND id_film = ?")->execute([$id_user, $id_film]);
+   echo'unliked';
 
-// Vérifier si l'utilisateur a déjà liké
-$stmt = $pdo->prepare("SELECT * FROM likes WHERE id_users = ? AND id_film = ?");
-$stmt->execute([$user_id, $film_id]);
-
-if ($stmt->rowCount() === 0) {
-    // Ajouter le like
-    $pdo->prepare("INSERT INTO likes (id_users, id_film) VALUES (?, ?)")->execute([$user_id, $film_id]);
+}else{
+    //ici on like le film
+    $pdo->prepare("INSERT INTO likes (id_users, id_film) VALUES (?, ?)")->execute([$id_user, $id_film]);
+    echo'liked';
 }
+
 
 header("Location: parcourir.php");
 exit;

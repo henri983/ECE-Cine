@@ -11,16 +11,16 @@ $error = '';
 
 // Traitement du formulaire d'inscription
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
-    $username = trim(filter_var($_POST['username'], FILTER_SANITIZE_STRING));
+    $username = trim(strip_tags($_POST['username'], FILTER_SANITIZE_STRING));
     $role = in_array($_POST['type'], ['etudiant', 'enseignant', 'administrateur']) ? $_POST['type'] : 'etudiant';
-    $email = trim(filter_var($_POST['email'], FILTER_SANITIZE_EMAIL));
+    $email = trim(strip_tags($_POST['email'], FILTER_SANITIZE_EMAIL));
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
     // Vérifications
     if (empty($username) || empty($email) || empty($password) || empty($confirm_password)) {
         $error = "Tous les champs sont obligatoires.";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    } elseif (!strip_tags($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Adresse email invalide.";
     } elseif ($password !== $confirm_password) {
         $error = "Les mots de passe ne correspondent pas.";

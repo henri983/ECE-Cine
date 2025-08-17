@@ -1,56 +1,88 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();}
-// Connexion et config
+    session_start();
+}
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/db_connect.php';
 ?>
 
-<div class="logo">
-  <!-- <a class="#" href="<?= BASE_URL ?>index.php">ECE CINE</a> -->
-  <h2>ECE CINE</h2>
-</div>
-
-<!-- pour charger l'utilisateur -->
-<ul>
-<?php if (isset($_SESSION['role'])): ?>
-  <?php if ($_SESSION['role'] === 'etudiant'): ?>
-    <li><a href="etudiant/espace.php">Espace etudiant</a></li>
-  <?php elseif ($_SESSION['role'] === 'enseignant'): ?>
-    <li><a href="enseignant/espace.php">Espace enseignant</a></li>
-  <?php elseif ($_SESSION['role'] === 'administrateur'): ?>
-    <!-- <li><a href="admin/espace.php">Espace administif</a></li> -->
-     <li><a href="/ECE-Cine/admin/admin.php">Espace administif</a></li>
-  <?php endif; ?>
-<?php endif; ?>
-</ul>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container">
-    <!-- <a class="navbar-brand" href="<?= BASE_URL ?>dashboard/etudiant/home.php">Accueil</a>
-
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button> -->
-    <div class="collapse navbar-collapse" id="navMenu">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>dashboard/etudiant/home.php">Accueil</a></li>
-        <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>dashboard/etudiant/parcourir.php">Parcours</a></li>
-        <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>dashboard/etudiant/share.php">Partage</a></li>
-        <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>dashboard/etudiant/notification.php">Notification</a></li>
-        <!-- <li class="nav-item"><a href="inscription.php" class="nav-link">Inscription</a></li> -->
-      </ul>
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" href="<?= BASE_URL ?>login.php">Connexion</a>
-        </li>
-        <?php if (isset($_SESSION['id_users'])): ?>
-        <li class="nav-item">
-          <a class="nav-link" href="<?= BASE_URL ?>logout.php">Déconnexion</a>
-        </li>
-        <?php endif; ?>
-      </ul>
+<header>
+    <div class="logo text-center py-3">
+        <h2><a href="<?= BASE_URL ?>index.php" class="text-decoration-none text-dark">ECE CINE</a></h2>
     </div>
-  </div>
-</nav>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="<?= BASE_URL ?>index.php">Accueil</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav me-auto">
+
+                    <!-- Étudiant -->
+                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'etudiant'): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>etudiant/espace.php"> Mon espace</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>dashboard/etudiant/home.php">Accueil étudiant</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>dashboard/etudiant/parcourir.php"> Parcourir</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>dashboard/etudiant/share.php">Partage</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>dashboard/etudiant/notification.php"> Notifications</a>
+                        </li>
+
+                    <!-- Enseignant -->
+                    <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'enseignant'): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>enseignant/espace.php"> Mon espace</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>enseignant/cours.php"> Mes cours</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>enseignant/gestion_etudiants.php"> Étudiants</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>enseignant/partage.php"> Partage</a>
+                        </li>
+
+                    <!-- Administrateur -->
+                    <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'administrateur'): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>admin/admin.php"> Tableau de bord</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>admin/users.php"> Gestion des utilisateurs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>admin/parametres.php"> Paramètres</a>
+                        </li>
+                    <?php endif; ?>
+
+                </ul>
+
+                <ul class="navbar-nav">
+                    <?php if (!isset($_SESSION['id_users'])): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>login.php"> Connexion</a>
+                        </li>
+                    <?php else: ?>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger" href="<?= BASE_URL ?>logout.php"> Déconnexion</a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

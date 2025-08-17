@@ -4,7 +4,7 @@
  * Utilisation centralisée pour tout le site
  */
 
-$DB_HOST = "localhost";     // Hôte MySQL
+$DB_HOST = "localhost:3307";     // Hôte MySQL
 $DB_NAME = "ece_cine";      // Nom de la base
 $DB_USER = "root";          // Utilisateur MySQL
 $DB_PASS = "";              // Mot de passe MySQL (vide par défaut sous XAMPP/MAMP)

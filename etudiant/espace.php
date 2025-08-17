@@ -5,6 +5,17 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/db_connect.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/users_fonction.php';
 
+
+
+
+if (!isset($_SESSION['id_users'])) {
+    echo "Utilisateur non connecté. Redirection en cours...";
+    header('Location: login.php');
+    exit();
+}
+
+$id = $_SESSION['id_users'];
+
 // -------------------------------------------------------------------------------------------------------------------------
 $id_user = $_SESSION['id_users'];
 $message = '';

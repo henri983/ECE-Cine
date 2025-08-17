@@ -37,6 +37,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/users_fonction.php'
         SELECT f.id, f.titre, f.realisateur, f.url_affiche, COUNT(l.id) AS nb_likes
         FROM film f
         LEFT JOIN likes l ON f.id = l.id_film
+        WHERE f .valide=1
         GROUP BY f.id, f.titre, f.realisateur, f.url_affiche
         ORDER BY nb_likes DESC
         LIMIT 10
