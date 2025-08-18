@@ -25,28 +25,28 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/users_fonction.php'
     <h2>Bienvenue sur ECE Ciné</h2>
     <p>
         ECE Ciné est un site web communautaire réservé aux membres de l’École ECE.
-        Il permet à chacun de partager ses films préférés, de découvrir ceux des autres 
+        Il permet à chacun de partager ses film$film préférés, de découvrir ceux des autres 
         et d’interagir avec la communauté grâce à un système de like et de notifications.
     </p>
 
     <h2 class="mt-5">🎬 Sélection de la semaine</h2>
 
     <?php
-    // Récupérer les 10 films les plus likés
+    // Récupérer les 10 film$film les plus likés
     $stmt = $pdo->prepare("
-        SELECT f.id, f.titre, f.realisateur, f.url_affiche, COUNT(l.id) AS nb_likes
-        FROM film f
-        LEFT JOIN likes l ON f.id = l.id_film
-        WHERE f .valide=1
-        GROUP BY f.id, f.titre, f.realisateur, f.url_affiche
-        ORDER BY nb_likes DESC
-        LIMIT 10
-    ");
+    SELECT f.id, f.titre, f.realisateur, f.url_affiche, COUNT(l.id) AS nb_likes
+    FROM film f
+    LEFT JOIN likes l ON f.id = l.id_film
+    GROUP BY f.id, f.titre, f.realisateur, f.url_affiche
+    ORDER BY nb_likes DESC
+    LIMIT 10
+");
+
     $stmt->execute();
     $films = $stmt->fetchAll();
 
     if (count($films) > 0): ?>
-        <div id="carouselFilms" class="carousel slide" data-bs-ride="carousel">
+        <div id="carouselfilm$film" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <?php foreach ($films as $index => $film): ?>
                     <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
@@ -70,11 +70,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/users_fonction.php'
                 <?php endforeach; ?>
             </div>
 
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselFilms" data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselfilm$film" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Précédent</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselFilms" data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselfilm$film" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Suivant</span>
             </button>

@@ -2,10 +2,10 @@
 session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/db_connect.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php'; 
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/users_fonction.php';
 
-// Récupère l'ID du film depuis l'URL
+// Vérifie que l'ID du film est bien passé
 if (!isset($_GET['id'])) {
     echo "Film non spécifié.";
     exit;
@@ -16,32 +16,31 @@ $id_film = (int)$_GET['id'];
 // Récupération des infos du film
 $stmt = $pdo->prepare("SELECT * FROM film WHERE id = ?");
 $stmt->execute([$id_film]);
-$film = $stmt->fetch();
+$film = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$film) {
     echo "Film introuvable.";
     exit;
 }
 
-// Récupération du nombre de likes
+//  Nombre de likes
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM likes WHERE id_film = ?");
 $stmt->execute([$id_film]);
 $nb_likes = $stmt->fetchColumn();
 
-// Vérifie si l'utilisateur a liké
+//  Vérifie si l'utilisateur a déjà liké
 $hasLiked = false;
 if (isset($_SESSION['id_users'])) {
-    $stmt = $pdo->prepare("SELECT * FROM likes WHERE id_film = ? AND id_users = ?");
+    $stmt = $pdo->prepare("SELECT 1 FROM likes WHERE id_film = ? AND id_users = ?");
     $stmt->execute([$id_film, $_SESSION['id_users']]);
     $hasLiked = $stmt->fetch() !== false;
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title><?= htmlspecialchars($film['titre']) ?>ECE Ciné</title>
+    <title><?= htmlspecialchars($film['titre']) ?> | ECE Ciné</title>
     <link rel="stylesheet" href="/ECE-Cine/assets/style/header.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 </head>
@@ -51,17 +50,21 @@ if (isset($_SESSION['id_users'])) {
 
 <div class="container my-5">
     <div class="row">
+        <!-- Affiche du film -->
         <div class="col-md-4">
             <?php if (!empty($film['url_affiche'])): ?>
-                <img src="<?= htmlspecialchars($film['url_affiche']) ?>" class="img-fluid" alt="Affiche du film">
+                <img src="<?= htmlspecialchars($film['url_affiche']) ?>" class="img-fluid rounded shadow" alt="Affiche du film">
             <?php else: ?>
-                <div class="bg-secondary text-white text-center p-5">Aucune affiche</div>
+                <div class="bg-secondary text-white text-center p-5 rounded">Aucune affiche</div>
             <?php endif; ?>
         </div>
+
+        <!-- Infos du film -->
         <div class="col-md-8">
             <h2><?= htmlspecialchars($film['titre']) ?></h2>
             <p><strong>Réalisateur :</strong> <?= htmlspecialchars($film['realisateur']) ?></p>
-            
+
+            <!-- Bouton Like -->
             <?php if (isset($_SESSION['id_users'])): ?>
                 <form method="post" action="/ECE-Cine/like_film.php" class="mb-3">
                     <input type="hidden" name="film_id" value="<?= $film['id'] ?>">
@@ -78,32 +81,33 @@ if (isset($_SESSION['id_users'])) {
 
     <hr>
 
+    <!-- Commentaires -->
     <h4 class="mt-4">Commentaires</h4>
-
     <?php
     $stmt = $pdo->prepare("
         SELECT c.contenu, c.created_at, u.username 
-        FROM commentaires c 
-        JOIN users u ON c.id_users = u.id 
-        WHERE c.id_film = ? 
+        FROM commentaires c
+        JOIN users u ON c.id_users = u.id
+        WHERE c.id_film = ?
         ORDER BY c.created_at DESC
     ");
     $stmt->execute([$id_film]);
-    $commentaires = $stmt->fetchAll();
+    $commentaires = $stmt->fetchAll(PDO::FETCH_ASSOC);
     ?>
 
     <?php if ($commentaires): ?>
         <?php foreach ($commentaires as $comment): ?>
-            <div class="border p-2 mb-2">
+            <div class="border rounded p-3 mb-2 bg-light">
                 <strong><?= htmlspecialchars($comment['username']) ?></strong>
-                <small class="text-muted"><?= $comment['created_at'] ?></small>
-                <p><?= nl2br(htmlspecialchars($comment['contenu'])) ?></p>
+                <small class="text-muted"> — <?= $comment['created_at'] ?></small>
+                <p class="mb-0"><?= nl2br(htmlspecialchars($comment['contenu'])) ?></p>
             </div>
         <?php endforeach; ?>
     <?php else: ?>
-        <p>Aucun commentaire pour ce film.</p>
+        <p class="text-muted">Aucun commentaire pour ce film.</p>
     <?php endif; ?>
 
+    <!-- Formulaire ajout commentaire -->
     <?php if (isset($_SESSION['id_users'])): ?>
         <form method="post" action="/ECE-Cine/commentaire.php" class="mt-4">
             <input type="hidden" name="id_film" value="<?= $id_film ?>">

@@ -16,6 +16,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/db_connect.php';
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="<?= BASE_URL ?>index.php">Accueil</a>
+            <a class="navbar-brand" href="<?= BASE_URL ?>includes/research.php">Recherche</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -26,12 +27,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/db_connect.php';
                     <!-- Étudiant -->
                     <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'etudiant'): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= BASE_URL ?>etudiant/espace.php"> Mon espace</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?= BASE_URL ?>dashboard/etudiant/home.php">Accueil étudiant</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" href="<?= BASE_URL ?>dashboard/etudiant/parcourir.php"> Parcourir</a>
                         </li>
                         <li class="nav-item">
@@ -40,13 +35,17 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/db_connect.php';
                         <li class="nav-item">
                             <a class="nav-link" href="<?= BASE_URL ?>dashboard/etudiant/notification.php"> Notifications</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>etudiant/espace.php"> Mon espace</a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>dashboard/etudiant/home.php">Accueil étudiant</a>
+                        </li> -->
+                    
 
                     <!-- Enseignant -->
                     <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'enseignant'): ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?= BASE_URL ?>enseignant/espace.php"> Mon espace</a>
-                        </li>
-                        <li class="nav-item">
+                         <li class="nav-item">
                             <a class="nav-link" href="<?= BASE_URL ?>enseignant/cours.php"> Mes cours</a>
                         </li>
                         <li class="nav-item">
@@ -56,16 +55,20 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/db_connect.php';
                             <a class="nav-link" href="<?= BASE_URL ?>enseignant/partage.php"> Partage</a>
                         </li>
 
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>enseignant/espace.php"> Mon espace</a>
+                        </li>
+                       
                     <!-- Administrateur -->
                     <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'administrateur'): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= BASE_URL ?>admin/admin.php"> Tableau de bord</a>
+                            <a class="nav-link" href="<?= BASE_URL ?>admin/dashbord.php"> Tableau de bord</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= BASE_URL ?>admin/users.php"> Gestion des utilisateurs</a>
+                            <a class="nav-link" href="<?= BASE_URL ?>admin/validate_user.php"> Gestion des utilisateurs</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= BASE_URL ?>admin/parametres.php"> Paramètres</a>
+                            <a class="nav-link" href="<?= BASE_URL ?>admin/espace.php"> Paramètres</a>
                         </li>
                     <?php endif; ?>
 

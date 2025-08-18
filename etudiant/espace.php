@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_info'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espace administratif ECE Cine</title>
+    <title>Espace Etudiant</title>
     <link rel="stylesheet" href="../assets/style/header.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 </head>
@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_info'])) {
         </div>
     </div>
 
-    <!-- Form infos nom/prenom -->
+    <!-- Formulaire infos nom/prenom -->
     <form method="POST" class="mt-3">
         <label>Nom :</label>
         <input type="text" name="nom" class="form-control" value="<?= htmlspecialchars($user['nom'] ?? '') ?>">
@@ -153,9 +153,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_info'])) {
     <form method="POST" class="mt-3">
         <label>Choisir un fond d’écran :</label>
         <select name="background" class="form-control">
-            <option value="default.jpg" <?= ($user['fond_ecran'] ?? '') === 'default.jpg' ? 'selected' : '' ?>>Par défaut</option>
-            <option value="cinema1.jpg" <?= ($user['fond_ecran'] ?? '') === 'cinema1.jpg' ? 'selected' : '' ?>>Cinéma 1</option>
-            <option value="cinema2.jpg" <?= ($user['fond_ecran'] ?? '') === 'cinema2.jpg' ? 'selected' : '' ?>>Cinéma 2</option>
+            <option value="assets/images/default.jpg" <?= ($user['fond_ecran'] ?? '') === 'assets/images/default.jpg' ? 'selected' : '' ?>>Par défaut</option>
+            <option value="assets/images/cinema1.jpg" <?= ($user['fond_ecran'] ?? '') === 'assets/images/cinema1.jpg' ? 'selected' : '' ?>>Cinéma 1</option>
+            <option value="assets/images/cinema2.jpg" <?= ($user['fond_ecran'] ?? '') === 'assets/images/cinema2.jpg' ? 'selected' : '' ?>>Cinéma 2</option>
         </select>
         <button type="submit" name="change_background" class="btn btn-info mt-2">Appliquer</button>
     </form>
