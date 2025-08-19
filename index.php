@@ -32,7 +32,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/users_fonction.php'
     <h2 class="mt-5">🎬 Sélection de la semaine</h2>
 
     <?php
-    // Récupérer les 10 film$film les plus likés
+    // Récupérer les 10 films les plus likés
     $stmt = $pdo->prepare("
     SELECT f.id, f.titre, f.realisateur, f.url_affiche, COUNT(l.id) AS nb_likes
     FROM film f
@@ -46,7 +46,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/users_fonction.php'
     $films = $stmt->fetchAll();
 
     if (count($films) > 0): ?>
-        <div id="carouselfilm$film" class="carousel slide" data-bs-ride="carousel">
+        <div id="carouselFilm" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <?php foreach ($films as $index => $film): ?>
                     <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
