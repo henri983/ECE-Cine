@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/init.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
 

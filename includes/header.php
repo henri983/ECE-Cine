@@ -46,13 +46,17 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/db_connect.php';
                     <!-- Enseignant -->
                     <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'enseignant'): ?>
                          <li class="nav-item">
-                            <a class="nav-link" href="<?= BASE_URL ?>enseignant/cours.php"> Mes cours</a>
+                            <a class="nav-link" href="<?= BASE_URL ?>dashboard/etudiant/parcourir.php"> Parcourir</a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>dashboard/etudiant/share.php">Partage</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= BASE_URL ?>enseignant/gestion_etudiants.php"> Étudiants</a>
+                            <a class="nav-link" href="<?= BASE_URL ?>dashboard/etudiant/notification.php"> Notifications</a>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= BASE_URL ?>enseignant/partage.php"> Partage</a>
+                            <a class="nav-link" href="<?= BASE_URL ?>admin/validate_film.php"> Valider les films partagés</a>
                         </li>
 
                         <li class="nav-item">

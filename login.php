@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/init.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/db_connect.php';
@@ -7,6 +8,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/users_fonction.php'
 
 $message = '';
 $error = '';
+
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
 // Vérification de la méthode de requête et du bouton de connexion
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {

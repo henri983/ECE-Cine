@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/init.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/cine_db.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/db_connect.php';
@@ -7,6 +8,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/users_fonction.php'
 
 // Détruire toutes les variables de session
 $_SESSION = array();
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
 // Si vous voulez détruire complètement la session, effacez également
 // le cookie de session.
