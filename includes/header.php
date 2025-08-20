@@ -10,7 +10,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/db_connect.php';
 
 <header>
     <div class="logo text-center py-3">
-        <h2><a href="<?= BASE_URL ?>index.php" class="text-decoration-none text-dark">ECE CINE</a></h2>
+        <a href="<?= BASE_URL ?>index.php" class="text-decoration-none text-dark logo-link">
+            <!-- L'image sera ajoutée via CSS -->
+            <span class="logo-img-css"></span>
+        </a>
     </div>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -56,7 +59,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/db_connect.php';
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= BASE_URL ?>admin/validate_film.php"> Valider les films partagés</a>
+                            <a class="nav-link" href="<?= BASE_URL ?>admin/validate_film.php"> Validation de film</a>
                         </li>
 
                         <li class="nav-item">

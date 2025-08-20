@@ -1,16 +1,14 @@
 /* logo */
-.logo {
-  font-family: Arial, sans-serif;
-  font-weight: bold;
-  font-size: 20px;
-  color: #2ecc71;
-  margin-left: 100px;
-  padding: 15px 30px;
-  border: 3px;
-  display: inline-block;
-  border-radius: 8px;
-  box-shadow: 2px 2px 8px rgba(0,0,0,0.15);
+.logo-img-css {
+    display: inline-block;          /* Pour que l'image s'affiche correctement */
+    width: 200px;                   /* Largeur du logo (à ajuster) */
+    height: 100px;                   /* Hauteur du logo (à ajuster) */
+    background-image: url("../images/logo.png"); /* Chemin vers ton logo */
+    background-size: contain;       /* Adapte l'image à la taille du bloc */
+    background-repeat: no-repeat;   /* Pas de répétition */
+    background-position: center;    /* Centrage de l’image */
 }
+
 
 /* nav-item */
 .nav-item {
@@ -46,7 +44,10 @@
 .navbar-brand:hover {
   background-color: #27ae60;
 }
-
+body {
+  font-family: Arial, sans-serif;
+  background-color: white !important;
+}
 /* Responsive - Tablettes */
 @media (max-width: 992px) {
   .logo {

@@ -25,7 +25,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/ECE-Cine/includes/users_fonction.php'
     <h2>Bienvenue sur ECE Ciné</h2>
     <p>
         ECE Ciné est un site web communautaire réservé aux membres de l’École ECE.
-        Il permet à chacun de partager ses film$film préférés, de découvrir ceux des autres 
+        Il permet à chacun de partager ses films préférés, de découvrir ceux des autres 
         et d’interagir avec la communauté grâce à un système de like et de notifications.
     </p>
 
